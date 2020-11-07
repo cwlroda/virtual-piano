@@ -5,7 +5,9 @@ piano = Piano()
 
 def playMusic(event, x, y, flags, params):
   if event == cv2.EVENT_MOUSEMOVE:
-    print(x,y)
+    key = piano.press(x, y)
+    if key is not None:
+      print(key+1)
 
 
 def main():
