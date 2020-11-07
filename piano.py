@@ -70,6 +70,10 @@ class Piano:
     for position, key in enumerate(self.whiteKeys):
       if between(x, y, key):
         self.pressed = True
+        # for actual fingers
+        # # self.playing = key
+        
+        # for mouse
         self.playing = self.whiteKeys[self.keys-position-1]
         return position
     else:
