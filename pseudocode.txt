@@ -1,0 +1,27 @@
+// in handpose file
+// point[0] and point[1] are x,y coordinates of a fingertip
+// you can create a list to store all 5 fingertips
+cv2.circle(frame, (int(point[0]), int(point[1])), 6, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
+
+// outside while loop for reading frames
+initialise empty list to store fingertips
+initialise frame counter c
+for every frame ++c
+
+if c == 0:
+    store fingertip coordinates in list
+// this updates fingertip locations every 5 frames assuming it takes ~5 frames (number can be tweaked) for the finger to move downwards on a press action 
+else if c is a multiple of 5:
+    update fingertip coordinates
+
+// main algorithm
+// threshold val is a variable we can set to adjust sensitivity of detection
+if points[0] is within x bounds of key1,
+    and points[1] is within y bounds of key1,
+    and points[1] - points_from_5_frames_ago[1] >= threshold val
+    playSound()
+...
+(add else if cases to check for each of the keys)
+
+Note: Bcos we're running for loops for each of the fingertips, a chord may lag ever so slightly
+
