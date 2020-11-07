@@ -15,7 +15,7 @@ class Webcam:
       self.current_frame = self.video_capture.read()[1]
                   
   def get_current_frame(self):
-    return self.current_frames
+    return self.current_frame
 
 webcam = Webcam()
 webcam.start()
