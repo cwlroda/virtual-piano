@@ -3,8 +3,6 @@ import time
 import numpy as np
 import imutils
 
-from UMatFileVideoStream import UMatFileVideoStream
-
 protoFile = "hand/pose_deploy.prototxt"
 weightsFile = "hand/pose_iter_102000.caffemodel"
 nPoints = 22
@@ -13,38 +11,27 @@ POSE_PAIRS = [ [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],[0,9],[9,10],[10,
 threshold = 0.2
 
 input_source = "asl.mp4"
-# cap = cv2.VideoCapture(0)
-# hasFrame, frame = cap.read()
+cap = cv2.VideoCapture(0)
+hasFrame, frame = cap.read()
 
-# umat
-cap = UMatFileVideoStream(0)
-frameWidth = cap.width
-frameHeight = cap.height
-aspect_ratio = frameWidth/frameHeight
+try:
+    frameWidth = frame.shape[1]
+    frameHeight = frame.shape[0]
 
-# try:
-#     frameWidth = frame.shape[1]
-#     frameHeight = frame.shape[0]
-
-#     aspect_ratio = frameWidth/frameHeight
-# except:
-#     aspect_ratio = 1
+    aspect_ratio = frameWidth/frameHeight
+except:
+    aspect_ratio = 1
 
 inHeight = 300
 inWidth = int(((aspect_ratio*inHeight)*8)//8)
 
-fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-vid_writer = cv2.VideoWriter('output.mp4',fourcc, 15, (frameWidth,frameHeight))
+# fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+# vid_writer = cv2.VideoWriter('output.mp4',fourcc, 15, (frameWidth,frameHeight))
 
 net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
 
 # setting GPU
-net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
-
 cv2.ocl.setUseOpenCL(True)
-device = cv2.ocl_Device()
-print(device.isAMD())
-print(cv2.ocl.haveOpenCL())
 
 k = 0
 while 1:
@@ -54,8 +41,7 @@ while 1:
     # hasFrame, frame = cap.read()
 
     frame = cap.read()
-    # frameCopy = np.copy(frame)
-    frameCopy = frame
+    frameCopy = np.copy(frame)
     
     # if not hasFrame:
     #     cv2.waitKey()
@@ -109,7 +95,7 @@ while 1:
     # cv2.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
     # cv2.putText(frame, "Hand Pose using OpenCV", (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 50, 0), 2, lineType=cv2.LINE_AA)
     cv2.imshow('Output-Skeleton', frame)
-    cv2.imwrite("video_output/{:03d}.jpg".format(k), frame)
+    # cv2.imwrite("video_output/{:03d}.jpg".format(k), frame)
     key = cv2.waitKey(1)
     if key == 27:
         break
@@ -119,6 +105,6 @@ while 1:
     fps = 1.0 / time_taken
     print("fps= {}".format(fps))
     
-    vid_writer.write(frame)
+    # vid_writer.write(frame)
 
-vid_writer.release()
+# vid_writer.release()

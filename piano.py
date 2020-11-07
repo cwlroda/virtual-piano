@@ -16,9 +16,13 @@ class Piano:
     self.pressed = False
     self.playing = None
 
-  def display(self, img):
+  def display(self, img, h=None, w=None):
     self.img = img
-    height, width, _ = self.img.shape
+    if not h:
+      height, width, _ = self.img.shape
+    else: 
+      height = h
+      width = w
     self.left = int(width*(1-self.width)/2)
     self.right = int(width*(1+self.width)/2)
     self.up = int(height*(1-self.height))
@@ -73,20 +77,24 @@ class Piano:
       if between(x, y, key):
         self.pressed = True
         # for actual fingers
-        # # self.playing = key
+        self.playing = key
         
         # for mouse
-        self.playing = self.whiteKeys[self.keys-position-1]
-        filename = "data\keys" + "\\" + str(position+1) + ".mp3"
-        filedir = os.path.dirname(os.path.abspath(__file__))
-        filepath = os.path.join(filedir, filename)
-        playsound(filepath)
+        # self.playing = self.whiteKeys[self.keys-position-1]
+        try:
+          filename = "data\keys" + "\\" + str(position+1) + ".mp3"
+          filedir = os.path.dirname(os.path.abspath(__file__))
+          filepath = os.path.join(filedir, filename)
+          playsound(filepath)
+        except:
+          index = str(position+1)
+          filename = 'data/keys/' + index + '.mp3'
+          playsound(filename)
         return position
     else:
       self.pressed = False
       self.playing = None
       return None
-      
 
 def between(x, y, box):
   return box[0][0] < x < box[0][1] and box[1][0] < y < box[1][1]
