@@ -10,8 +10,7 @@ class Piano:
     self.scale = scale
     self.width = scale[0]
     self.height = scale[1]
-    self.octaves = octaves
-    self.keys = self.octaves*8 -1
+    self.keys = 15
     self.whiteKeys = []
     self.pressed = False
     self.playing = None
@@ -74,10 +73,10 @@ class Piano:
         self.pressed = True
         # for actual fingers
         # # self.playing = key
-        
+
         # for mouse
         self.playing = self.whiteKeys[self.keys-position-1]
-        filename = "data\keys" + "\\" + str(position+1) + ".mp3"
+        filename = "data/keys/" + str(position+1) + ".mp3"
         filedir = os.path.dirname(os.path.abspath(__file__))
         filepath = os.path.join(filedir, filename)
         playsound(filepath)

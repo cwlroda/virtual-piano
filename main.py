@@ -1,13 +1,15 @@
 import cv2
 from piano import Piano
+from threading import Thread
 
 piano = Piano()
 
 def playMusic(event, x, y, flags, params):
   if event == cv2.EVENT_MOUSEMOVE:
-    key = piano.press(x, y)
-    if key is not None:
-      print(key+1)
+    Thread(target=piano.press, args=(x,y,)).start()
+    # key = piano.press(x, y)
+    # if key is not None:
+    #   print(key+1)
 
 
 def main():
