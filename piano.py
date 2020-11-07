@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+from playsound import playsound
+import os
 
 from tkinter import *
 
@@ -9,7 +11,7 @@ class Piano:
     self.width = scale[0]
     self.height = scale[1]
     self.octaves = octaves
-    self.keys = self.octaves*8
+    self.keys = self.octaves*8 -1
     self.whiteKeys = []
     self.pressed = False
     self.playing = None
@@ -75,6 +77,10 @@ class Piano:
         
         # for mouse
         self.playing = self.whiteKeys[self.keys-position-1]
+        filename = "data\keys" + "\\" + str(position+1) + ".mp3"
+        filedir = os.path.dirname(os.path.abspath(__file__))
+        filepath = os.path.join(filedir, filename)
+        playsound(filepath)
         return position
     else:
       self.pressed = False
