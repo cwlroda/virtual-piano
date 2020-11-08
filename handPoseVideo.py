@@ -8,7 +8,7 @@ nPoints = 22
 
 threshold = 0.2
 
-input_source = "ezgif.com-gif-maker (1).mp4"
+input_source = "ezgif.com-gif-maker (2).mp4"
 cap = cv2.VideoCapture(input_source, cv2.CAP_FFMPEG)
 hasFrame, frame = cap.read()
 
@@ -29,6 +29,7 @@ frame_counter = 0
 frame_gap = 10
 points = np.zeros(5, dtype=(int,2))
 old_points = np.zeros(5, dtype=(int,2))
+num = None
 
 while 1:
     t = time.time()
@@ -63,9 +64,10 @@ while 1:
                 old_points[finger] = (int(point[0]), int(point[1]))
             # cv2.putText(frameCopy, "{}".format(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, .8, (0, 0, 255), 2, lineType=cv2.LINE_AA)
 
-            if int(point[1]) - old_points[finger][1] > 20:
-                print("Finger {} pressed".format(finger+1))
-
+            if int(point[1]) - old_points[finger][1] > 50:
+                num = finger + 1
+    
+    cv2.putText(frame, "Finger {} pressed".format(num), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
     # cv2.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
     # cv2.imshow('Output-Skeleton', frame)
     
