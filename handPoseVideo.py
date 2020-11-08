@@ -7,7 +7,7 @@ nPoints = 22
 
 threshold = 0.2
 
-input_source = "asl.mp4"
+input_source = "ezgif.com-gif-maker (1).mp4"
 cap = cv2.VideoCapture(input_source, cv2.CAP_FFMPEG)
 hasFrame, frame = cap.read()
 
@@ -16,11 +16,11 @@ frameHeight = frame.shape[0]
 
 aspect_ratio = frameWidth/frameHeight
 
-inHeight = int(240)
+inHeight = int(360)
 inWidth = int(((aspect_ratio*inHeight)*8)//8)
 
 fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-vid_writer = cv2.VideoWriter('output.mp4',fourcc, 30, (frame.shape[1],frame.shape[0]))
+vid_writer = cv2.VideoWriter('output_tmp.mp4',fourcc, 30, (frame.shape[1],frame.shape[0]))
 
 net = cv2.dnn.readNetFromCaffe(protoFile, weightsFile)
 
@@ -37,11 +37,9 @@ while 1:
     net.setInput(inpBlob)
     output = net.forward()
 
-    # Empty list to store the detected keypoints
-    skip = [0, 1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19]
+    fingertips = [4, 8, 12, 16, 20]
 
-    for i in range(nPoints):
-        if i in skip: continue
+    for i in fingertips:
         # confidence map of corresponding body's part.
         probMap = output[0, i, :, :]
         probMap = cv2.resize(probMap, (frameWidth, frameHeight))
@@ -52,8 +50,6 @@ while 1:
         if prob > threshold :
             cv2.circle(frame, (int(point[0]), int(point[1])), 6, (0, 0, 255), thickness=-1, lineType=cv2.FILLED)
 
-    print("Time Taken for frame = {}".format(time.time() - t))
-
     # cv2.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
     # cv2.imshow('Output-Skeleton', frame)
     
@@ -61,7 +57,7 @@ while 1:
     if key == 27:
         break
 
-    print("total = {}".format(time.time() - t))
+    print("Total time = {}".format(time.time() - t))
 
     vid_writer.write(frame)
 
