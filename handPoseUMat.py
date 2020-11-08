@@ -79,8 +79,11 @@ if __name__ == '__main__':
         output = net.forward()
         print("Time taken for net = {}".format(time.time() - t))
 
+        piano.display(frame)
+        
         # Empty list to store the detected keypoints
         fingertips = [4, 8, 12, 16, 20]
+        num = None
 
         for i in fingertips:
             finger = int(i/4 - 1)
@@ -102,12 +105,13 @@ if __name__ == '__main__':
 
                 if int(point[1]) - old_points[finger][1] > 20:
                     playMusic(int(point[0]), int(point[1]))
-                    print("Finger {} pressed".format(finger+1))
+                    num = finger + 1
+                    print("Finger {} pressed".format(num))
                 
             # print('frame number:', frame_counter)
             # print('finger number:', finger)
             # print('Points:', points)
-
+        cv2.putText(frame, "Finger {} pressed".format(num), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
         # Draw Skeleton
         # for pair in POSE_PAIRS:
         #     partA = pair[0]
@@ -122,7 +126,7 @@ if __name__ == '__main__':
 
         # cv2.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
         # cv2.putText(frame, "Hand Pose using OpenCV", (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 50, 0), 2, lineType=cv2.LINE_AA)
-        # cv2.imshow('Output-Skeleton', frame)
+        cv2.imshow('Output-Skeleton', frame)
         # cv2.imwrite("video_output/{:03d}.jpg".format(k), frame)
         key = cv2.waitKey(1)
         if key == 27:
