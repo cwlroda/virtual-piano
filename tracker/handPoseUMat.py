@@ -42,9 +42,10 @@ net.setPreferableTarget(cv2.dnn.DNN_TARGET_CPU)
 cv2.ocl.setUseOpenCL(True)
 
 # matrix points of size 2x5 (2 sets of data, for 5 fingers each)
-points = np.zeros((2, 5), dtype=(int,2))
+points = np.zeros(5, dtype=(int,2))
+old_points = np.zeros(5, dtype=(int,2))
 frame_counter = 0
-frame_gap = 5
+frame_gap = 10
 
 while 1:
     t = time.time()
@@ -72,10 +73,9 @@ while 1:
     print("Time taken for net = {}".format(time.time() - t))
 
     # Empty list to store the detected keypoints
-    skip = [0, 1, 2, 3, 5, 6, 7, 9, 10, 11, 13, 14, 15, 17, 18, 19]
+    fingertips = [4, 8, 12, 16, 20]
 
-    for i in range(nPoints):
-        if i in skip: continue
+    for i in fingertips:
         finger = int(i/4 - 1)
         # confidence map of corresponding body's part.
         probMap = output[0, i, :, :]
@@ -85,18 +85,20 @@ while 1:
         minVal, prob, minLoc, point = cv2.minMaxLoc(probMap)
 
         # if frame number is a multiple of 5
-        if frame_counter%frame_gap == 0:
-            points[0, :] = points[1, :]
-            if prob > threshold:
-                cv2.circle(frame, (int(point[0]), int(point[1])), 6, (0, 255, 255), thickness=-1, lineType=cv2.FILLED)
-                points[1, finger] = (int(point[0]), int(point[1]))
-                # cv2.putText(frameCopy, "{}".format(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, .8, (0, 0, 255), 2, lineType=cv2.LINE_AA)
-            else :
-                points[1, finger] = (0, 0)
-        
-        print('frame number:', frame_counter)
-        print('finger number:', finger)
-        print('Points:', points)
+        if prob > threshold:
+            cv2.circle(frame, (int(point[0]), int(point[1])), 6, (0, 255, 255), thickness=-1, lineType=cv2.FILLED)
+            points[finger] = (int(point[0]), int(point[1]))    
+            
+            if frame_counter % frame_gap == 0:
+                old_points[finger] = (int(point[0]), int(point[1]))
+            # cv2.putText(frameCopy, "{}".format(i), (int(point[0]), int(point[1])), cv2.FONT_HERSHEY_SIMPLEX, .8, (0, 0, 255), 2, lineType=cv2.LINE_AA)
+
+            if int(point[1]) - old_points[finger][1] > 20:
+                print("Finger {} pressed".format(finger+1))
+            
+        # print('frame number:', frame_counter)
+        # print('finger number:', finger)
+        # print('Points:', points)
 
     # Draw Skeleton
     # for pair in POSE_PAIRS:
@@ -112,7 +114,7 @@ while 1:
 
     # cv2.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
     # cv2.putText(frame, "Hand Pose using OpenCV", (50, 50), cv2.FONT_HERSHEY_COMPLEX, 1, (255, 50, 0), 2, lineType=cv2.LINE_AA)
-    cv2.imshow('Output-Skeleton', frame)
+    # cv2.imshow('Output-Skeleton', frame)
     # cv2.imwrite("video_output/{:03d}.jpg".format(k), frame)
     key = cv2.waitKey(1)
     if key == 27:
