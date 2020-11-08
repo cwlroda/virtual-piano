@@ -82,7 +82,7 @@ if __name__ == "__main__":
         
         cv2.putText(frame, "Finger {} pressed".format(num), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
         # cv2.putText(frame, "time taken = {:.2f} sec".format(time.time() - t), (50, 50), cv2.FONT_HERSHEY_COMPLEX, .8, (255, 50, 0), 2, lineType=cv2.LINE_AA)
-        # cv2.imshow('Output-Skeleton', frame)
+        cv2.imshow('Output-Skeleton', frame)
         
         key = cv2.waitKey(1)
         if key == 27:

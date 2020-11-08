@@ -72,11 +72,11 @@ class Piano:
       if between(x, y, key):
         self.pressed = True
         # for actual fingers
-        # # self.playing = key
+        self.playing = key
 
         # for mouse
-        self.playing = self.whiteKeys[self.keys-position-1]
-        filename = "data/keys/" + str(position+1) + ".mp3"
+        # self.playing = self.whiteKeys[self.keys-position-1]
+        filename = "data/keys/" + str(self.keys-position) + ".mp3"
         filedir = os.path.dirname(os.path.abspath(__file__))
         filepath = os.path.join(filedir, filename)
         playsound(filepath)
